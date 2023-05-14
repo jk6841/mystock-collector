@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  mystock-collector:
+    pull_policy: always
+    image: 'ghcr.io/jk6841/mystock-collector:latest'
+    container_name: 'mystock-collector'
+    networks:
+      - net-int
+      - net-kafka
+      - net-mysql
+networks:
+  net-int:
+    driver: bridge
+  net-kafka:
+    driver: bridge
+  net-mysql:
+    driver: bridge

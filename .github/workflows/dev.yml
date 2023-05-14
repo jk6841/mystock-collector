@@ -1,18 +1,18 @@
-name: ci-main
+name: dev
 
 on:
   push:
     branches:
-      - 'main'
+      - 'feature/*'
+      - 'fix/*'
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -36,15 +36,13 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=latest
             type=ref,event=branch
-            type=raw,value={{date 'YYYYMMDD-hhmmss' tz='Asia/Seoul'}}
 
-      - name: Build and push Docker image
+      - name: Build Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
-          push: true
+          push: false
           platforms: linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
